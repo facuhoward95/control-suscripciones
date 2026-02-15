@@ -1,10 +1,9 @@
 const urlScript = "https://script.google.com/macros/s/AKfycby-2sDzefTaw-y23X-WEeLcZ0bN6Q56nYHyOwaTkfRDzKmLn0XP482i1Wewuid_XPBo/exec";
 
 
-// ================= CARGAR TABLA (SIN FETCH) =================
+// ================= CARGAR TABLA =================
 function cargarTabla() {
 
-    // Elimina script anterior si existe
     const oldScript = document.getElementById("jsonpScript");
     if (oldScript) oldScript.remove();
 
@@ -56,38 +55,51 @@ function renderTabla(data) {
 }
 
 
-// ================= AGREGAR CLIENTE (POST) =================
+// ================= AGREGAR CLIENTE SIN FETCH =================
 function agregarCliente() {
 
     const nombre = document.getElementById("nombre").value.trim();
-    const cantidad = parseInt(document.getElementById("cantidad").value);
-    const duracion = parseInt(document.getElementById("duracion").value);
+    const cantidad = document.getElementById("cantidad").value;
+    const duracion = document.getElementById("duracion").value;
 
     if (!nombre || !cantidad || !duracion) {
         alert("Completá todos los campos");
         return;
     }
 
-    const formData = new URLSearchParams();
-    formData.append("nombre", nombre);
-    formData.append("cantidad", cantidad);
-    formData.append("duracion", duracion);
+    // Crear formulario oculto
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = urlScript;
+    form.target = "hidden_iframe";
 
-    fetch(urlScript, {
-        method: "POST",
-        body: formData
-    })
-    .then(() => {
+    form.innerHTML = `
+        <input name="nombre" value="${nombre}">
+        <input name="cantidad" value="${cantidad}">
+        <input name="duracion" value="${duracion}">
+    `;
 
-        document.getElementById("nombre").value = "";
-        document.getElementById("cantidad").value = "";
-        document.getElementById("duracion").value = "";
+    document.body.appendChild(form);
 
-        setTimeout(() => {
-            cargarTabla();
-        }, 800);
-    });
+    form.submit();
+
+    document.body.removeChild(form);
+
+    document.getElementById("nombre").value = "";
+    document.getElementById("cantidad").value = "";
+    document.getElementById("duracion").value = "";
+
+    setTimeout(() => {
+        cargarTabla();
+    }, 1000);
 }
+
+
+// Crear iframe oculto para evitar redirección
+const iframe = document.createElement("iframe");
+iframe.name = "hidden_iframe";
+iframe.style.display = "none";
+document.body.appendChild(iframe);
 
 
 cargarTabla();
