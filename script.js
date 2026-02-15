@@ -1,17 +1,25 @@
 const urlScript = "https://script.google.com/macros/s/AKfycby-2sDzefTaw-y23X-WEeLcZ0bN6Q56nYHyOwaTkfRDzKmLn0XP482i1Wewuid_XPBo/exec";
 
 
-// ================= CARGAR TABLA =================
+// ================= CARGAR TABLA (SIN FETCH) =================
 function cargarTabla() {
 
+    // Elimina script anterior si existe
+    const oldScript = document.getElementById("jsonpScript");
+    if (oldScript) oldScript.remove();
+
     const script = document.createElement("script");
+    script.id = "jsonpScript";
     script.src = urlScript + "?callback=renderTabla";
+
     document.body.appendChild(script);
 }
 
 
 // ================= RENDER TABLA =================
 function renderTabla(data) {
+
+    if (!data || data.length === 0) return;
 
     const encabezados = data[0];
     const datos = data.slice(1);
@@ -48,7 +56,7 @@ function renderTabla(data) {
 }
 
 
-// ================= AGREGAR CLIENTE =================
+// ================= AGREGAR CLIENTE (POST) =================
 function agregarCliente() {
 
     const nombre = document.getElementById("nombre").value.trim();
@@ -70,6 +78,7 @@ function agregarCliente() {
         body: formData
     })
     .then(() => {
+
         document.getElementById("nombre").value = "";
         document.getElementById("cantidad").value = "";
         document.getElementById("duracion").value = "";
