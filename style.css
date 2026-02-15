@@ -1,0 +1,32 @@
+body {
+    font-family: Arial;
+    padding: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid #ccc;
+    padding: 8px;
+}
+
+th {
+    background: #007bff;
+    color: white;
+}
+
+.vencido {
+    background-color: #f8d7da;
+}
+
+.por-vencer {
+    background-color: #fff3cd;
+}
+
+.resumen {
+    margin-bottom: 20px;
+    font-size: 18px;
+}
